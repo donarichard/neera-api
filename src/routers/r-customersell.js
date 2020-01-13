@@ -1,9 +1,5 @@
 const express = require('express')
 const CustomerSell = require('../models/customersell')
-const { MongoClient, ObjectID } = require('mongodb')
-const connectionURL = 'mongodb://localhost:27017/neera'
-const databaseName = 'neera-api'
-
 const router = new express.Router()
 
 
@@ -19,20 +15,15 @@ router.post('/customer/sell', (req, res) => {
     })
 })
 
-//gettingproducts
+//getting customer request sell
 
-router.get('/customer/requestsell', (req, res) => {
-
-    MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) => {
-        if (error) {
-            return console.log('Unable to connect to database!')
-        }
-
-        const db = client.db(databaseName)
-
-        db.collection('customersells').find({}).toArray((error, customersells) => {
-            res.status(201).send(customersells)
-        })
+router.get('/customer/requestsell', (req,res) => {
+    CustomerSell.find ({}).then((customersells) =>{
+        res.status(201).send(customersells)
+    }).catch((e) => {
+        res.status(401).json({
+            message: "no data"+e
+          });
     })
 })
 

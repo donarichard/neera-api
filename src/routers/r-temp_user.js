@@ -2,12 +2,6 @@ const express = require('express')
 const Tempuser = require('../models/temp_user')
 
 const bcrypt= require('bcrypt')
-const jwt = require('jsonwebtoken')
-
-// const  MongoClient  = require('mongodb')
-// const connectionURL = 'mongodb://localhost:27017/neera'
-const databaseName = 'neera-api'
-const validator = require('validator')
 
 
 const router = new express.Router()
@@ -51,20 +45,6 @@ router.get('/tempuser', (req,res) => {
     })
 })
 
-// router.get('/tempusers', (req, res) => {
-
-//     MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) => {
-//         if (error) {
-//             return console.log('Unable to connect to database!')
-//         }
-
-//         const db = client.db(databaseName)
-
-//         db.collection('tempusers').find({}).toArray((error, tempusers) => {
-//             res.status(201).send(tempusers)
-//         })
-//     })
-// })
 
 router.delete("/remove/tempuser/:id", function(req, res) {
     var id = req.params.id;

@@ -1,9 +1,5 @@
 const express = require('express')
 const Sell = require('../models/sell')
-const { MongoClient, ObjectID } = require('mongodb')
-const connectionURL = 'mongodb://localhost:27017/neera'
-const databaseName = 'neera-api'
-
 const router = new express.Router()
 
 
@@ -20,38 +16,34 @@ router.post('/sell', (req, res) => {
 })
 
 //gettingproducts
-
-router.get('/requestsell', (req, res) => {
-
-    MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) => {
-        if (error) {
-            return console.log('Unable to connect to database!')
-        }
-
-        const db = client.db(databaseName)
-
-        db.collection('sells').find({}).toArray((error, sells) => {
-            res.status(201).send(sells)
-        })
+router.get('/requestsell', (req,res) => {
+    Sell.find ({}).then((sells) =>{
+        res.status(201).send(sells)
+    }).catch((e) => {
+        res.status(401).json({
+            message: "no data"+e
+          });
     })
 })
+
 
 //customer sell
 
-router.get('/customer/requestsell', (req, res) => {
+router.get('/customer/requestsell', (req,res) => {
 
-    MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) => {
-        if (error) {
-            return console.log('Unable to connect to database!')
-        }
+    const id = req.headers['id']
 
-        const db = client.db(databaseName)
-        const id = req.headers['id']
-        db.collection('sells').find({"user_id" : id}).toArray((error, sells) => {
-            res.status(201).send(sells)
-        })
+    Sell.find ({"user_id" : id}).then((sells) =>{
+        res.status(201).send(sells)
+    }).catch((e) => {
+        res.status(401).json({
+            message: "no data"+e
+          });
     })
 })
+
+
+
 
 
 //remove sell request

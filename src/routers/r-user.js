@@ -4,10 +4,6 @@ const User = require('../models/user')
 const bcrypt= require('bcrypt')
 const jwt = require('jsonwebtoken')
 
-const { MongoClient, ObjectID } = require('mongodb')
-const connectionURL = 'mongodb://localhost:27017/neera'
-const databaseName = 'neera-api'
-const validator = require('validator')
 const router = new express.Router()
 
 //users insert
@@ -38,20 +34,16 @@ router.post('/users/approved', (req, res) => {
 
 //getting users data as json
 
-router.get('/users', (req, res) => {
-
-    MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) => {
-        if (error) {
-            return console.log('Unable to connect to database!')
-        }
-
-        const db = client.db(databaseName)
-
-        db.collection('users').find({}).toArray((error, users) => {
-            res.status(201).send(users)
-        })
-    })
+router.get('/users', (req,res) => {
+  User.find ({}).then((users) =>{
+      res.status(201).send(users)
+  }).catch((e) => {
+      res.status(401).json({
+          message: "no data"+e
+        });
+  })
 })
+
 
 //login
 
